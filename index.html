@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Be My Valentine</title>
+    <link rel="stylesheet" href="css/valentine.css" />
+    <style>
+      body {
+        text-align: center;
+        font-family: sans-serif;
+        background-color: #fff0f5;
+        position: relative;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      #valentineQuestion {
+        font-size: 24px;
+        margin-top: 50px;
+      }
+
+      .answerButton {
+        padding: 10px 20px;
+        font-size: 20px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 10px;
+        border: none;
+        background-color: #ffb6c1;
+        transition: 0.3s ease;
+        position: relative;
+      }
+
+      .answerButton:hover {
+        background-color: #ff69b4;
+        color: white;
+      }
+
+      #noButton {
+        position: absolute;
+      }
+
+      .responsive {
+        width: 300px;
+        height: auto;
+        margin-top: 20px;
+      }
+
+	a {
+            color: #222;
+        }
+
+        .wrap {
+            width: 420px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .secret_message {
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+  </head>
+  <body>
+     <div class="container">
+        <div class="wrap">
+            <a href="#" class="start">click here to start</a>
+            <div class="secret_message" data-text="Hey Roxine,<br>
+                <center><strong>Good Morning!</strong></center><br>
+                I hope you will like this :)
+	 	Will you forgive me?
+        </div>
+    </div>
+    <div id="valentineQuestion"><b>Will you forgive me?</b></div>
+    <button class="answerButton" id="yesButton" onclick="location.href='thankyou.html'">Yes</button>
+    <button class="answerButton" id="noButton">I no no wanna o(╥﹏╥)o</button>
+    <br />
+    <img src="cat.gif" alt="cat asking question" class="responsive" />
+    <br />
+    <audio controls autoplay loop>
+      <source src="mixkit-cartoon-kitty-begging-meow-92.wav" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+	var running = false;
+        function typeWriter(text, n) {
+            if (n < (text.length)) {
+                $('.secret_message').html(text.substring(0, n + 1) + "❤");
+                n++;
+                setTimeout(function () {
+                    typeWriter(text, n)
+                }, 100);
+            }
+            else {
+                running = false;
+            }
+        }
+
+        $('.start').click(function (e) {
+            e.stopPropagation();
+            if (running == false) {
+                var text = $('.secret_message').data('text');
+                running = true;
+                typeWriter(text, 0);
+            }
+        });
+      const noButton = document.getElementById("noButton");
+      const yesButton = document.getElementById("yesButton");
+
+      const texts = ["Really?", "Are you sure?", "Come on...", "Last chance!", "Fine 😢", "Yes"];
+      let clickCount = 0;
+
+      function getRandomPosition() {
+        const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+        return { x, y };
+      }
+
+      noButton.addEventListener("click", function () {
+        // Increase Yes button font size
+        let currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+        yesButton.style.fontSize = (currentSize + 20) + "px";
+
+        if (clickCount < texts.length - 1) {
+          // Update No button text for all except last
+          noButton.textContent = texts[clickCount];
+          clickCount++;
+
+          // Move No button to a random position
+          const { x, y } = getRandomPosition();
+          noButton.style.left = x + "px";
+          noButton.style.top = y + "px";
+        } else {
+          // Last click: change No button text to "Yes" and redirect on click
+          noButton.textContent = texts[texts.length - 1]; // "Yes"
+
+          // Remove this event listener so it doesn't move or change anymore
+          noButton.replaceWith(noButton.cloneNode(true));
+          const newNoButton = document.getElementById("noButton") || document.querySelector("#noButton, .answerButton#noButton");
+          if (newNoButton) {
+            newNoButton.style.position = "relative"; // reset position so it looks normal
+            newNoButton.onclick = function () {
+              location.href = 'thankyou.html';
+            };
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
